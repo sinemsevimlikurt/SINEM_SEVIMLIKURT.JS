@@ -595,6 +595,25 @@
             });
         },
 
+        toggleFavorite: (productId) => {
+            const index = self.favorites.indexOf(productId);
+
+            if (index == -1) {
+                self.favorites.push(productId);
+            } else {
+                self.favorites.splice(index, 1);
+            }
+
+            //Save to localStorage
+            localStorage.setItem(FAVORITES_KEY, JSON.stringify(self.favorites));
+
+            //Update UI
+            const heartIcon = document.querySelector(`.heart-icon[data-product-id = "${productId}"]`);
+            if (heartIcon) {
+                heartIcon.classList.toggle("favorite");
+            }
+        },
+
 
     };
 
