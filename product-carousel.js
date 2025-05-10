@@ -614,7 +614,29 @@
             }
         },
 
+        setEvents: () => {
+            // Navigation buttons
+            document.querySelector('.carousel-nav.prev').addEventListener('click', () => {
+                const slider = document.getElementById('product-slider');
+                slider.scrollBy({ left: -600, behavior: 'smooth' });
+            });
 
+            document.querySelector('.carousel-nav.next').addEventListener('click', () => {
+                const slider = document.getElementById('product-slider');
+                slider.scrollBy({ left: 600, behavior: 'smooth' });
+            });
+
+            // Event delegation for heart icons (for favorites)
+            document.addEventListener('click', (e) => {
+                const heartIcon = e.target.closest('.heart-icon');
+                if (heartIcon) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const productId = parseInt(heartIcon.getAttribute('data-product-id'));
+                    self.toggleFavorite(productId);
+                }
+            });
+        }
     };
 
     init();
