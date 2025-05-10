@@ -456,6 +456,145 @@
             }
         },
 
+        renderProducts: () => {
+            const slider = document.getElementById('product-slider');
+            if (!slider) return;
+
+            slider.innerHTML = '';
+
+            self.products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+
+                const productLink = document.createElement('a');
+                productLink.href = product.url;
+                productLink.target = '_blank';
+                productLink.style.textDecoration = 'none';
+                productLink.style.color = 'inherit';
+                productLink.style.display = 'block';
+
+                const image = document.createElement('img');
+                image.className = 'product-image';
+                image.src = product.img;
+                image.alt = product.name;
+                productLink.appendChild(image);
+
+                const brand = document.createElement('div');
+                brand.className = 'brand';
+                brand.textContent = product.brand;
+                productLink.appendChild(brand);
+
+                const title = document.createElement('div');
+                title.className = 'product-title';
+                title.textContent = product.name;
+                productLink.appendChild(title);
+
+                // Add star rating with review count
+                const ratingContainer = document.createElement('div');
+                ratingContainer.className = 'rating-container';
+
+                // Create star rating
+                const starRating = document.createElement('div');
+                starRating.className = 'star-rating';
+
+                // Default to 5 stars if not specified
+                const rating = product.rating || 5;
+
+                // Create 5 stars
+                for (let i = 0; i < 5; i++) {
+                    const star = document.createElement('span');
+                    // Fill stars based on rating
+                    if (i < rating) {
+                        star.className = 'star';
+                        star.textContent = '★';
+                    } else {
+                        star.className = 'star-empty';
+                        star.textContent = '★';
+                    }
+                    starRating.appendChild(star);
+                }
+
+                ratingContainer.appendChild(starRating);
+
+                // Add review count if available
+                if (product.reviewCount) {
+                    const reviewCount = document.createElement('span');
+                    reviewCount.className = 'review-count';
+                    reviewCount.textContent = `(${product.reviewCount})`;
+                    ratingContainer.appendChild(reviewCount);
+                }
+
+                productLink.appendChild(ratingContainer);
+
+                const priceContainer = document.createElement('div');
+                priceContainer.className = 'price-container';
+
+                const currentPrice = parseFloat(product.price);
+                const originalPrice = parseFloat(product.original_price);
+
+                const priceDisplay = document.createElement('div');
+                priceDisplay.style.display = 'flex';
+                priceDisplay.style.alignItems = 'center';
+
+                if (originalPrice && originalPrice > currentPrice) {
+                    const priceRow = document.createElement('div');
+                    priceRow.className = 'd-flex align-items-center';
+
+                    const originalPriceSpan = document.createElement('span');
+                    originalPriceSpan.className = 'original-price';
+                    originalPriceSpan.textContent = `${originalPrice.toFixed(2)} TL`;
+                    priceRow.appendChild(originalPriceSpan);
+
+                    // Calculate discount percentage
+                    const discountPercentage = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+                    const discountBadge = document.createElement('span');
+                    discountBadge.className = 'discount';
+                    discountBadge.innerHTML = `%${discountPercentage} <i class="icon icon-decrease"></i>`;
+                    discountBadge.style.marginLeft = '5px';
+                    priceRow.appendChild(discountBadge);
+
+                    priceDisplay.appendChild(priceRow);
+
+                    // Add margin between discount percentage and price
+                    priceDisplay.style.flexDirection = 'column';
+                    priceDisplay.style.marginBottom = '5px';
+
+                    const currentPriceSpan = document.createElement('span');
+                    currentPriceSpan.className = 'current-price discount-product';
+                    currentPriceSpan.textContent = `${currentPrice.toFixed(2)} TL`;
+                    currentPriceSpan.style.marginTop = '5px';
+                    priceDisplay.appendChild(currentPriceSpan);
+                } else {
+                    const currentPriceSpan = document.createElement('span');
+                    currentPriceSpan.className = 'current-price';
+                    currentPriceSpan.textContent = `${currentPrice.toFixed(2)} TL`;
+                    priceDisplay.appendChild(currentPriceSpan);
+                }
+
+                priceContainer.appendChild(priceDisplay);
+                productLink.appendChild(priceContainer);
+                card.appendChild(productLink);
+
+                // sepete ekle
+                const btn = document.createElement('button');
+                btn.className = 'add-to-cart';
+                btn.textContent = 'Sepete Ekle';
+                card.appendChild(btn);
+
+                const heartIcon = document.createElement('div');
+                heartIcon.className = `heart-icon ${self.favorites.includes(product.id) ? 'favorite' : ''}`;
+                heartIcon.setAttribute('data-product-id', product.id);
+                heartIcon.innerHTML = `
+            <svg viewBox="0 0 24 24">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+        `;
+
+                card.appendChild(heartIcon);
+                slider.appendChild(card);
+            });
+        },
+
 
     };
 
